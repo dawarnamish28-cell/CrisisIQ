@@ -31,66 +31,104 @@ async function bootstrap(db: D1Database) {
       db.prepare(`CREATE INDEX IF NOT EXISTS idx_vol_avail ON volunteers(availability)`),
     ])
 
-    const facilities = [
+    const f = [
       ['AIIMS Trauma Centre','hospital','Sri Aurobindo Marg, Ansari Nagar','Delhi','Delhi',28.5672,77.2100,450,312,'open','+91-11-26588500'],
       ['Safdarjung Hospital','hospital','Ansari Nagar West','Delhi','Delhi',28.5685,77.2065,600,478,'open','+91-11-26707437'],
-      ['Lok Nayak Jai Prakash Hospital','hospital','Jawaharlal Nehru Marg, Delhi Gate','Delhi','Delhi',28.6382,77.2410,520,445,'emergency','+91-11-23232400'],
+      ['Lok Nayak Jai Prakash Hospital','hospital','Jawaharlal Nehru Marg','Delhi','Delhi',28.6382,77.2410,520,445,'emergency','+91-11-23232400'],
       ['GTB Hospital','hospital','Dilshad Garden, Shahdara','Delhi','Delhi',28.6839,77.3091,400,298,'open','+91-11-22586262'],
       ['Rajiv Gandhi Super Speciality Hospital','hospital','Tahirpur, Dilshad Garden','Delhi','Delhi',28.6912,77.3156,350,189,'open','+91-11-22890604'],
+      ['Ram Manohar Lohia Hospital','hospital','Baba Kharak Singh Marg','Delhi','Delhi',28.6270,77.2085,700,540,'open','+91-11-23365525'],
+      ['Hindu Rao Hospital','hospital','Hindu Rao Marg, Malka Ganj','Delhi','Delhi',28.6802,77.2117,500,380,'open','+91-11-23919293'],
+      ['Deen Dayal Upadhyay Hospital','hospital','Hari Nagar','Delhi','Delhi',28.6313,77.1182,450,320,'open','+91-11-25128484'],
       ['Yamuna Sports Complex Relief Camp','shelter','Surajmal Vihar','Delhi','Delhi',28.6276,77.2971,2000,1456,'open','+91-11-22145000'],
       ['Thyagraj Stadium Shelter','shelter','Thyagraj Nagar, INA','Delhi','Delhi',28.5830,77.2140,800,623,'open','+91-11-24617891'],
       ['Talkatora Indoor Stadium','shelter','President Estate','Delhi','Delhi',28.6225,77.1992,1200,340,'open','+91-11-23011792'],
-      ['NDRF 2nd Battalion HQ','rescue_center','Sector 29, Aravalli Hills, Faridabad','Faridabad','Haryana',28.4292,77.3103,200,48,'open','+91-129-2234400'],
+      ['Jawaharlal Nehru Stadium','shelter','Lodhi Road','Delhi','Delhi',28.5812,77.2378,5000,1800,'open','+91-11-24364837'],
+      ['Indira Gandhi Indoor Stadium','shelter','Ring Road, ITO','Delhi','Delhi',28.6339,77.2412,3500,950,'open','+91-11-23379750'],
+      ['NDRF 2nd Battalion HQ','rescue_center','Aravalli Hills, Faridabad','Faridabad','Haryana',28.4292,77.3103,200,48,'open','+91-129-2234400'],
       ['Delhi Fire Service HQ','rescue_center','Connaught Place','Delhi','Delhi',28.6315,77.2167,150,62,'open','+91-11-23416666'],
       ['KEM Hospital','hospital','Acharya Donde Marg, Parel','Mumbai','Maharashtra',19.0035,72.8422,1800,1420,'open','+91-22-24136051'],
       ['Lilavati Hospital','hospital','Bandra Reclamation','Mumbai','Maharashtra',19.0509,72.8290,350,220,'open','+91-22-26751000'],
       ['JJ Hospital','hospital','Byculla East','Mumbai','Maharashtra',18.9670,72.8364,1350,1050,'open','+91-22-23735555'],
-      ['Nair Hospital','hospital','Dr. A.L. Nair Road, Mumbai Central','Mumbai','Maharashtra',18.9730,72.8200,900,680,'open','+91-22-23027062'],
+      ['Nair Hospital','hospital','Mumbai Central','Mumbai','Maharashtra',18.9730,72.8200,900,680,'open','+91-22-23027062'],
+      ['Sion Hospital','hospital','Sion West','Mumbai','Maharashtra',19.0407,72.8628,800,610,'open','+91-22-24076381'],
       ['SSKM Hospital','hospital','244 AJC Bose Road','Kolkata','West Bengal',22.5363,88.3441,1600,1280,'open','+91-33-22041101'],
-      ['NRS Medical College & Hospital','hospital','138 AJC Bose Road','Kolkata','West Bengal',22.5430,88.3499,900,760,'open','+91-33-22861401'],
+      ['NRS Medical College','hospital','138 AJC Bose Road','Kolkata','West Bengal',22.5430,88.3499,900,760,'open','+91-33-22861401'],
       ['Calcutta Medical College','hospital','88 College Street','Kolkata','West Bengal',22.5711,88.3638,1200,950,'open','+91-33-22413636'],
+      ['RG Kar Medical College','hospital','1 Khudiram Bose Sarani','Kolkata','West Bengal',22.5935,88.3703,600,480,'open','+91-33-25574073'],
       ['Government General Hospital','hospital','Park Town','Chennai','Tamil Nadu',13.0780,80.2752,2500,1900,'open','+91-44-25305000'],
-      ['Rajiv Gandhi Government General Hospital','hospital','EVR Periyar Salai','Chennai','Tamil Nadu',13.0780,80.2682,1800,1420,'open','+91-44-25305000'],
-      ['Stanley Medical College Hospital','hospital','Old Jail Road, Royapuram','Chennai','Tamil Nadu',13.1141,80.2909,1100,820,'open','+91-44-25281665'],
+      ['Rajiv Gandhi Govt General Hospital','hospital','EVR Periyar Salai','Chennai','Tamil Nadu',13.0780,80.2682,1800,1420,'open','+91-44-25305000'],
+      ['Stanley Medical College Hospital','hospital','Royapuram','Chennai','Tamil Nadu',13.1141,80.2909,1100,820,'open','+91-44-25281665'],
+      ['Kilpauk Medical College Hospital','hospital','Poonamallee High Road','Chennai','Tamil Nadu',13.0783,80.2453,800,590,'open','+91-44-26432842'],
       ['Victoria Hospital','hospital','Fort, KR Market Area','Bengaluru','Karnataka',12.9610,77.5770,1500,1100,'open','+91-80-26701150'],
       ['Bowring Hospital','hospital','Shivaji Nagar','Bengaluru','Karnataka',12.9815,77.6007,600,430,'open','+91-80-25591325'],
+      ['Nimhans','hospital','Hosur Road','Bengaluru','Karnataka',12.9425,77.5937,800,600,'open','+91-80-26995000'],
       ['Osmania General Hospital','hospital','Afzalgunj','Hyderabad','Telangana',17.3700,78.4731,1800,1350,'open','+91-40-24600146'],
       ['Gandhi Hospital','hospital','Musheerabad','Hyderabad','Telangana',17.4000,78.4800,1500,1120,'open','+91-40-27505566'],
-      ['SMS Hospital','hospital','JLN Marg, Jaipur','Jaipur','Rajasthan',26.9196,75.8091,2000,1530,'open','+91-141-2560291'],
-      ['Civil Hospital','hospital','Asarwa','Ahmedabad','Gujarat',23.0465,72.6006,2500,1820,'open','+91-79-22683721'],
-      ['IGMC Shimla','hospital','The Ridge, Shimla','Shimla','Himachal Pradesh',31.1070,77.1730,500,380,'open','+91-177-2804251'],
-      ['PGIMER','hospital','Sector 12','Chandigarh','Chandigarh',30.7628,76.7746,2000,1600,'open','+91-172-2747585'],
-      ['King George Medical University','hospital','Shahmina Road','Lucknow','Uttar Pradesh',26.8574,80.9325,3000,2400,'open','+91-522-2258140'],
-      ['NDRF 1st Battalion HQ','rescue_center','Guwahati, Assam','Guwahati','Assam',26.1864,91.7413,300,75,'open','+91-361-2340399'],
+      ['Nizam Institute of Medical Sciences','hospital','Punjagutta','Hyderabad','Telangana',17.4200,78.4500,1000,780,'open','+91-40-23489000'],
+      ['SMS Hospital','hospital','JLN Marg','Jaipur','Rajasthan',26.9196,75.8091,2000,1530,'open','+91-141-2560291'],
+      ['Zanana Hospital','hospital','MI Road','Jaipur','Rajasthan',26.9110,75.7890,700,520,'open','+91-141-2564222'],
+      ['Civil Hospital Ahmedabad','hospital','Asarwa','Ahmedabad','Gujarat',23.0465,72.6006,2500,1820,'open','+91-79-22683721'],
+      ['VS Hospital','hospital','Ellis Bridge','Ahmedabad','Gujarat',23.0290,72.5650,800,590,'open','+91-79-26577621'],
+      ['IGMC Shimla','hospital','The Ridge','Shimla','Himachal Pradesh',31.1070,77.1730,500,380,'open','+91-177-2804251'],
+      ['PGIMER Chandigarh','hospital','Sector 12','Chandigarh','Chandigarh',30.7628,76.7746,2000,1600,'open','+91-172-2747585'],
+      ['GMCH Chandigarh','hospital','Sector 32','Chandigarh','Chandigarh',30.7370,76.7681,1200,900,'open','+91-172-2665253'],
+      ['KGMU Lucknow','hospital','Shahmina Road','Lucknow','Uttar Pradesh',26.8574,80.9325,3000,2400,'open','+91-522-2258140'],
+      ['BHU Hospital','hospital','Lanka','Varanasi','Uttar Pradesh',25.2677,82.9913,1500,1150,'open','+91-542-2368558'],
+      ['AIIMS Patna','hospital','Phulwarisharif','Patna','Bihar',25.5820,85.0871,700,520,'open','+91-612-2451070'],
+      ['PMCH Patna','hospital','Ashok Rajpath','Patna','Bihar',25.6167,85.1584,2000,1650,'open','+91-612-2300343'],
+      ['AIIMS Bhopal','hospital','Saket Nagar','Bhopal','Madhya Pradesh',23.2050,77.4600,600,420,'open','+91-755-2672317'],
+      ['Hamidia Hospital','hospital','Royal Market','Bhopal','Madhya Pradesh',23.2600,77.4120,1000,780,'open','+91-755-2540222'],
+      ['AIIMS Bhubaneswar','hospital','Sijua','Bhubaneswar','Odisha',20.2350,85.7780,800,580,'open','+91-674-2476789'],
+      ['SCB Medical College','hospital','Mangalabag','Cuttack','Odisha',20.4700,85.8900,1500,1200,'open','+91-671-2414080'],
+      ['GMCH Guwahati','hospital','Bhangagarh','Guwahati','Assam',26.1864,91.7413,1200,950,'open','+91-361-2529457'],
+      ['JNIMS Imphal','hospital','Porompat','Imphal','Manipur',24.8097,93.9440,500,350,'open','+91-385-2414654'],
+      ['NEIGRIHMS Shillong','hospital','Mawdiangdiang','Shillong','Meghalaya',25.5732,91.8830,400,280,'open','+91-364-2538013'],
+      ['AIIMS Rishikesh','hospital','Virbhadra Road','Rishikesh','Uttarakhand',30.0705,78.2553,700,500,'open','+91-135-2462938'],
+      ['SKIMS Srinagar','hospital','Soura','Srinagar','Jammu & Kashmir',34.1264,74.8403,800,600,'open','+91-194-2401013'],
+      ['GMC Jammu','hospital','Bakshi Nagar','Jammu','Jammu & Kashmir',32.7181,74.8526,900,680,'open','+91-191-2584221'],
+      ['Goa Medical College','hospital','Bambolim','Panaji','Goa',15.4604,73.8746,700,490,'open','+91-832-2458727'],
+      ['Calicut Medical College','hospital','Medical College PO','Kozhikode','Kerala',11.2580,75.7830,1400,1050,'open','+91-495-2350216'],
+      ['Trivandrum Medical College','hospital','Chalakkuzhi','Thiruvananthapuram','Kerala',8.5150,76.9490,1200,900,'open','+91-471-2528386'],
+      ['JIPMER Puducherry','hospital','Dhanvantari Nagar','Puducherry','Puducherry',11.9570,79.7990,1000,750,'open','+91-413-2296000'],
+      ['Madurai Govt Rajaji Hospital','hospital','Panagal Road','Madurai','Tamil Nadu',9.9210,78.1190,2000,1550,'open','+91-452-2532535'],
+      ['NDRF 1st Battalion HQ','rescue_center','Guwahati','Guwahati','Assam',26.1584,91.7699,300,75,'open','+91-361-2340399'],
       ['NDRF 3rd Battalion HQ','rescue_center','Mundali, Cuttack','Cuttack','Odisha',20.5284,85.8790,250,60,'open','+91-671-2365100'],
       ['NDRF 5th Battalion HQ','rescue_center','Sudumbare, Pune','Pune','Maharashtra',18.6975,73.6520,300,82,'open','+91-20-22852021'],
-      ['NDRF 8th Battalion HQ','rescue_center','Kamrup, Guwahati','Guwahati','Assam',26.1584,91.7699,200,55,'open','+91-361-2850234'],
+      ['NDRF 7th Battalion HQ','rescue_center','Bathinda','Bathinda','Punjab',30.2100,74.9450,200,55,'open','+91-164-2250121'],
+      ['NDRF 8th Battalion HQ','rescue_center','Kamrup','Guwahati','Assam',26.1400,91.7500,200,50,'open','+91-361-2850234'],
+      ['NDRF 9th Battalion HQ','rescue_center','Patna','Patna','Bihar',25.6100,85.1400,250,65,'open','+91-612-2262055'],
       ['NDRF 10th Battalion HQ','rescue_center','Vijayawada','Vijayawada','Andhra Pradesh',16.5062,80.6480,250,70,'open','+91-866-2412100'],
       ['NDRF 12th Battalion HQ','rescue_center','Itanagar','Itanagar','Arunachal Pradesh',27.0844,93.6053,150,35,'open','+91-360-2244567'],
-      ['Nehru Indoor Stadium Shelter','shelter','Periamet, Chennai','Chennai','Tamil Nadu',13.0726,80.2802,3000,1200,'open','+91-44-25390678'],
-      ['Salt Lake Stadium Shelter','shelter','Salt Lake, Bidhannagar','Kolkata','West Bengal',22.5726,88.4092,4000,800,'open','+91-33-23587712'],
+      ['Nehru Indoor Stadium Shelter','shelter','Periamet','Chennai','Tamil Nadu',13.0726,80.2802,3000,1200,'open','+91-44-25390678'],
+      ['Salt Lake Stadium Shelter','shelter','Bidhannagar','Kolkata','West Bengal',22.5726,88.4092,4000,800,'open','+91-33-23587712'],
       ['Kanteerava Indoor Stadium','shelter','Kasturba Road','Bengaluru','Karnataka',12.9758,77.5952,2000,450,'open','+91-80-22110875'],
-      ['Sardar Patel Stadium Shelter','shelter','Navrangpura','Ahmedabad','Gujarat',23.0396,72.5618,3500,600,'open','+91-79-26400221'],
+      ['Sardar Patel Stadium','shelter','Navrangpura','Ahmedabad','Gujarat',23.0396,72.5618,3500,600,'open','+91-79-26400221'],
       ['Gachibowli Indoor Stadium','shelter','Gachibowli','Hyderabad','Telangana',17.4268,78.3497,2000,380,'open','+91-40-23001122'],
-      ['Jawaharlal Nehru Stadium','shelter','Lodhi Road','Delhi','Delhi',28.5812,77.2378,5000,1800,'open','+91-11-24364837'],
-      ['Indira Gandhi Indoor Stadium','shelter','Ring Road, ITO','Delhi','Delhi',28.6339,77.2412,3500,950,'open','+91-11-23379750'],
+      ['Balewadi Stadium Shelter','shelter','Balewadi','Pune','Maharashtra',18.5800,73.7700,2500,500,'open','+91-20-25684321'],
+      ['Sarusjai Stadium Shelter','shelter','Sarusjai','Guwahati','Assam',26.1250,91.8020,1500,300,'open','+91-361-2465789'],
+      ['Kalinga Stadium Shelter','shelter','Nayapalli','Bhubaneswar','Odisha',20.2880,85.8190,3000,700,'open','+91-674-2300456'],
+      ['Sawai Mansingh Stadium','shelter','Tonk Road','Jaipur','Rajasthan',26.8920,75.8010,2500,400,'open','+91-141-2742222'],
+      ['Greenfield Stadium Shelter','shelter','Kariavattom','Thiruvananthapuram','Kerala',8.5350,76.8830,2000,350,'open','+91-471-2418790'],
+      ['Gandhi Maidan Shelter','shelter','Frazer Road','Patna','Bihar',25.6120,85.1390,4000,900,'open','+91-612-2219876'],
+      ['EMS Stadium Shelter','shelter','Kozhikode','Kozhikode','Kerala',11.2520,75.7710,1800,280,'open','+91-495-2720345'],
     ]
 
     const batchSize = 8
-    for (let i = 0; i < facilities.length; i += batchSize) {
-      const chunk = facilities.slice(i, i + batchSize)
-      await db.batch(chunk.map(f =>
+    for (let i = 0; i < f.length; i += batchSize) {
+      const chunk = f.slice(i, i + batchSize)
+      await db.batch(chunk.map(r =>
         db.prepare(`INSERT OR IGNORE INTO shelters (name,type,address,city,state,latitude,longitude,capacity,occupancy,status,contact_phone) VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
-          .bind(f[0], f[1], f[2], f[3], f[4], f[5], f[6], f[7], f[8], f[9], f[10])
+          .bind(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[10])
       ))
     }
 
     const shelterCount = await db.prepare('SELECT COUNT(*) as c FROM shelters').first() as any
     const total = shelterCount?.c || 0
-    const resourceBatches: any[] = []
+    const resBatch: any[] = []
     for (let sid = 1; sid <= total; sid++) {
-      const isHosp = sid <= 29
-      resourceBatches.push(
+      const isHosp = sid <= 60
+      resBatch.push(
         db.prepare(`INSERT OR IGNORE INTO resources (shelter_id,water,food,medicine,blankets,rescue_equipment) VALUES (?,?,?,?,?,?)`)
           .bind(sid,
             isHosp ? 200 + Math.floor(Math.random() * 500) : 500 + Math.floor(Math.random() * 1800),
@@ -101,19 +139,19 @@ async function bootstrap(db: D1Database) {
           )
       )
     }
-    for (let i = 0; i < resourceBatches.length; i += 8) {
-      await db.batch(resourceBatches.slice(i, i + 8))
+    for (let i = 0; i < resBatch.length; i += 8) {
+      await db.batch(resBatch.slice(i, i + 8))
     }
 
     await db.batch([
       db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Dr. Arun Kapoor','arun.kapoor@ndrf.gov.in','+91-98765-43210','Emergency Medicine, Triage, Trauma Surgery','available',28.6139,77.2090)`),
       db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Priya Sharma','priya.sharma@redcross.in','+91-87654-32109','First Aid, CPR, Disaster Psychology','available',28.5672,77.2100)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Rahul Verma','rahul.verma@civildefence.in','+91-76543-21098','Search & Rescue, Structural Assessment, Rappelling','available',28.6350,77.2250)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Anjali Deshmukh','anjali.d@sphere.ngo','+91-65432-10987','Water Purification, Logistics, Camp Management','available',28.5830,77.2140)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Mohammed Irfan','m.irfan@delhifire.gov.in','+91-99887-76655','Firefighting, Hazmat Response, Rope Rescue','available',28.6315,77.2167)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Sunita Yadav','sunita.y@goonj.org','+91-88776-65544','Supply Distribution, Community Mobilization','available',28.6276,77.2971)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Vikram Singh Rathore','vikram.sr@army.mil.in','+91-77665-54433','Swift Water Rescue, Navigation, Heavy Equipment','available',28.6839,77.3091)`),
-      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Deepika Nair','deepika.nair@msf.org','+91-66554-43322','Nursing, Epidemiology, Field Hospital Setup','available',28.6912,77.3156)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Rahul Verma','rahul.verma@civildefence.in','+91-76543-21098','Search and Rescue, Structural Assessment','available',28.6350,77.2250)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Anjali Deshmukh','anjali.d@sphere.ngo','+91-65432-10987','Water Purification, Logistics','available',28.5830,77.2140)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Mohammed Irfan','m.irfan@delhifire.gov.in','+91-99887-76655','Firefighting, Hazmat Response','available',28.6315,77.2167)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Sunita Yadav','sunita.y@goonj.org','+91-88776-65544','Supply Distribution, Community Work','available',28.6276,77.2971)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Vikram Singh Rathore','vikram.sr@army.mil.in','+91-77665-54433','Swift Water Rescue, Navigation','available',28.6839,77.3091)`),
+      db.prepare(`INSERT OR IGNORE INTO volunteers (name,email,phone,skills,availability,location_lat,location_lng) VALUES ('Deepika Nair','deepika.nair@msf.org','+91-66554-43322','Nursing, Epidemiology, Field Hospital','available',28.6912,77.3156)`),
     ])
 
     dbReady = true
@@ -160,6 +198,7 @@ app.get('/api/stats', async (c) => {
       shelterOccupancy: Math.round(((shelterStats as any)?.occ || 0) / ((shelterStats as any)?.cap || 1) * 100),
       totalVolunteers: (volStats as any)?.t || 0,
       availableVolunteers: (volStats as any)?.a || 0,
+      totalFacilities: await db.prepare('SELECT COUNT(*) as c FROM shelters').first().then((r: any) => r?.c || 0),
     })
   } catch (e: any) { return c.json({ error: e.message }, 500) }
 })
@@ -230,8 +269,7 @@ app.post('/api/incidents', async (c) => {
 app.patch('/api/incidents/:id', async (c) => {
   try {
     const b = await c.req.json()
-    const u: string[] = []
-    const p: any[] = []
+    const u: string[] = [], p: any[] = []
     for (const k of ['status','severity','urgency','assigned_team','priority_score']) {
       if (b[k] !== undefined) { u.push(`${k}=?`); p.push(b[k]) }
     }
@@ -253,65 +291,34 @@ app.post('/api/ai/analyze', async (c) => {
     const imageInfo = b.image_info || {}
 
     const signals: Record<string, { words: string[][], weight: number }> = {
-      Flood: { words: [
-        ['flood'],['water','level'],['submerge'],['drown'],['waterlog'],['inundat'],['overflow'],['river','swell'],['rain','heavy'],['yamuna'],['drain','block'],['maroon'],['waist','deep'],['knee','deep'],['chest','deep'],['deluge'],['monsoon'],['embankment','breach'],['rising','water'],['waterlogged'],['flash','flood'],['dam','overflow'],['canal','breach'],['stagnant','water'],['sewage','overflow']
-      ], weight: 0 },
-      Fire: { words: [
-        ['fire'],['burn'],['blaze'],['smoke','thick'],['flame'],['inferno'],['chemical','fire'],['explosion'],['engulf'],['charred'],['gutted'],['cylinder','blast'],['short','circuit'],['arson'],['warehouse','fire'],['factory','fire'],['slum','fire'],['electric','fire'],['forest','fire'],['wildfire'],['gas','leak','fire'],['lpg'],['kerosene']
-      ], weight: 0 },
-      Earthquake: { words: [
-        ['earthquake'],['tremor'],['seismic'],['crack','wall'],['shake','building'],['quake'],['richter'],['aftershock'],['fissure'],['tectonic'],['building','sway'],['ground','split'],['seismograph'],['fault','line']
-      ], weight: 0 },
-      Landslide: { words: [
-        ['landslide'],['mudslide'],['debris','flow'],['slope','fail'],['hillside','collapse'],['mud','flow'],['erosion'],['rockfall'],['soil','slip'],['cave','in'],['sinkhole'],['subsidence'],['landslip'],['mountain','collapse']
-      ], weight: 0 },
-      Cyclone: { words: [
-        ['cyclone'],['hurricane'],['typhoon'],['wind','speed'],['storm','surge'],['tornado'],['gust'],['uprooted','tree'],['gale'],['squall'],['roof','blown'],['sheet','metal','fly'],['storm','warning'],['low','pressure']
-      ], weight: 0 },
-      'Building Collapse': { words: [
-        ['collapse','building'],['structure','fail'],['rubble'],['demolish'],['cave','in'],['pancake','collapse'],['slab','fall'],['pillar','crack'],['beam','break'],['under','construction','fall'],['illegal','construction'],['old','building','crack'],['wall','collapse'],['ceiling','fall'],['foundation','sink']
-      ], weight: 0 },
-      'Medical Emergency': { words: [
-        ['medical','emergency'],['injury','severe'],['hospital','urgent'],['patient','critical'],['ambulance'],['poison'],['heatstroke'],['cardiac','arrest'],['stroke'],['choking'],['bleeding','heavy'],['fracture'],['unconscious'],['epidemic'],['outbreak'],['snakebite'],['burn','victim'],['accident','victim'],['mass','casualty'],['covid'],['dengue'],['malaria','severe']
-      ], weight: 0 },
-      'Road Blockage': { words: [
-        ['road','block'],['tree','fallen'],['traffic','jam','severe'],['power','line','down'],['pothole','danger'],['crater','road'],['barricade'],['waterlogged','road'],['flyover','damage'],['underpass','flood'],['bridge','damage'],['highway','block'],['landslide','road']
-      ], weight: 0 },
+      Flood: { words: [['flood'],['water','level'],['submerge'],['drown'],['waterlog'],['inundat'],['overflow'],['river','swell'],['rain','heavy'],['yamuna'],['drain','block'],['maroon'],['waist','deep'],['knee','deep'],['deluge'],['monsoon'],['embankment'],['rising','water'],['flash','flood'],['dam'],['canal','breach'],['sewage']], weight: 0 },
+      Fire: { words: [['fire'],['burn'],['blaze'],['smoke'],['flame'],['inferno'],['chemical','fire'],['explosion'],['engulf'],['charred'],['gutted'],['cylinder'],['short','circuit'],['arson'],['warehouse','fire'],['factory','fire'],['slum','fire'],['electric','fire'],['forest','fire'],['wildfire'],['gas','leak'],['lpg'],['kerosene']], weight: 0 },
+      Earthquake: { words: [['earthquake'],['tremor'],['seismic'],['crack','wall'],['shake'],['quake'],['richter'],['aftershock'],['fissure'],['tectonic'],['building','sway'],['ground','split']], weight: 0 },
+      Landslide: { words: [['landslide'],['mudslide'],['debris','flow'],['slope'],['hillside'],['mud','flow'],['erosion'],['rockfall'],['soil','slip'],['cave','in'],['sinkhole'],['subsidence']], weight: 0 },
+      Cyclone: { words: [['cyclone'],['hurricane'],['typhoon'],['wind','speed'],['storm','surge'],['tornado'],['gust'],['uprooted'],['gale'],['squall'],['roof','blown'],['storm','warning']], weight: 0 },
+      'Building Collapse': { words: [['collapse'],['structure','fail'],['rubble'],['demolish'],['pancake'],['slab','fall'],['pillar'],['beam','break'],['construction','fall'],['illegal','construction'],['wall','collapse'],['ceiling','fall'],['foundation']], weight: 0 },
+      'Medical Emergency': { words: [['medical','emergency'],['injury'],['hospital','urgent'],['patient','critical'],['ambulance'],['poison'],['heatstroke'],['cardiac'],['stroke'],['choking'],['bleeding'],['fracture'],['unconscious'],['epidemic'],['outbreak'],['snakebite'],['accident','victim'],['mass','casualty']], weight: 0 },
+      'Road Blockage': { words: [['road','block'],['tree','fallen'],['traffic','jam'],['power','line','down'],['pothole'],['crater'],['barricade'],['waterlogged','road'],['flyover'],['underpass','flood'],['bridge','damage'],['highway','block']], weight: 0 },
     }
 
     for (const [cat, sig] of Object.entries(signals)) {
-      let matchCount = 0
+      let m = 0
       for (const phrase of sig.words) {
-        if (phrase.length === 1) {
-          if (desc.includes(phrase[0])) matchCount += 1.5
-        } else {
-          const allPresent = phrase.every(w => desc.includes(w))
-          if (allPresent) matchCount += 2.5
-          else if (phrase.some(w => desc.includes(w))) matchCount += 0.6
-        }
+        if (phrase.length === 1) { if (desc.includes(phrase[0])) m += 1.5 }
+        else { if (phrase.every(w => desc.includes(w))) m += 2.5; else if (phrase.some(w => desc.includes(w))) m += 0.6 }
       }
-      if (cat.toLowerCase() === userCat.toLowerCase()) matchCount += 4
-      sig.weight = matchCount
+      if (cat.toLowerCase() === userCat.toLowerCase()) m += 4
+      sig.weight = m
     }
 
     if (hasImage && imageInfo.filename) {
       const fname = (imageInfo.filename || '').toLowerCase()
-      const fsize = imageInfo.size || 0
-      const ftype = (imageInfo.type || '').toLowerCase()
-
-      for (const [cat, sig] of Object.entries(signals)) {
-        const catLower = cat.toLowerCase().replace(/\s+/g, '')
-        if (fname.includes('flood') || fname.includes('water')) { if (cat === 'Flood') sig.weight += 3 }
-        if (fname.includes('fire') || fname.includes('smoke') || fname.includes('burn')) { if (cat === 'Fire') sig.weight += 3 }
-        if (fname.includes('collapse') || fname.includes('rubble')) { if (cat === 'Building Collapse') sig.weight += 3 }
-        if (fname.includes('quake') || fname.includes('crack')) { if (cat === 'Earthquake') sig.weight += 3 }
-        if (fname.includes('injury') || fname.includes('blood') || fname.includes('accident')) { if (cat === 'Medical Emergency') sig.weight += 3 }
-        if (fname.includes('road') || fname.includes('block') || fname.includes('fallen')) { if (cat === 'Road Blockage') sig.weight += 3 }
-      }
-
-      if (fsize > 2 * 1024 * 1024) {
-        for (const sig of Object.values(signals)) { sig.weight += 0.3 }
-      }
+      if (fname.includes('flood') || fname.includes('water')) signals['Flood'].weight += 3
+      if (fname.includes('fire') || fname.includes('smoke')) signals['Fire'].weight += 3
+      if (fname.includes('collapse') || fname.includes('rubble')) signals['Building Collapse'].weight += 3
+      if (fname.includes('quake') || fname.includes('crack')) signals['Earthquake'].weight += 3
+      if (fname.includes('injury') || fname.includes('blood')) signals['Medical Emergency'].weight += 3
+      if (fname.includes('road') || fname.includes('block')) signals['Road Blockage'].weight += 3
     }
 
     const sorted = Object.entries(signals).sort((a, b) => b[1].weight - a[1].weight)
@@ -328,7 +335,7 @@ app.post('/api/ai/analyze', async (c) => {
     confidence = Math.min(Math.max(confidence, 28), 97.5)
     confidence = Math.round(confidence * 10) / 10
 
-    const critWords = ['trapped','stranded','casualt','death','dying','critical','life-threatening','ventilator','collapsed','buried','drowning','unconscious','bleeding heavily','amputation','crush','killed','bodies','fatalities']
+    const critWords = ['trapped','stranded','casualt','death','dying','critical','life-threatening','ventilator','collapsed','buried','drowning','unconscious','bleeding heavily','amputation','crush','killed','fatalities']
     const highWords = ['danger','rising','spread','multiple','toxic','severe','worsening','evacuate','approaching','structural damage','unstable','gas leak','hazardous','contaminated','rapidly','escalating']
     const crit = critWords.filter(w => desc.includes(w)).length
     const high = highWords.filter(w => desc.includes(w)).length
@@ -345,50 +352,36 @@ app.post('/api/ai/analyze', async (c) => {
 
     const templates: Record<string, Record<string, string>> = {
       Flood: {
-        Critical: `Severe flooding detected in the reported area. Analysis indicates significant water accumulation with potential for structural damage and risk to human life. Immediate deployment of water rescue units and evacuation teams is strongly recommended. ${hasImage ? 'Visual evidence corroborates the severity — high-resolution imagery indicates extensive inundation consistent with a Critical classification.' : ''}`,
-        High: `Substantial flooding identified. Water levels appear to be rising and may threaten low-lying structures. Preemptive evacuation of vulnerable populations and sandbagging operations are advised.${hasImage ? ' Photographic evidence supports elevated threat assessment.' : ''}`,
-        Moderate: `Flooding activity confirmed in the area. Current conditions suggest manageable water levels, but continued monitoring is essential as the situation could escalate during sustained rainfall.`,
-        Low: `Minor waterlogging reported. No immediate threat to life or critical infrastructure detected. Routine drainage response recommended.`,
+        Critical: `Severe flooding detected. Analysis indicates significant water accumulation with risk to human life. Immediate deployment of water rescue units and evacuation teams is strongly recommended.${hasImage ? ' Visual evidence corroborates the critical severity assessment.' : ''}`,
+        High: `Substantial flooding identified. Water levels appear to be rising and may threaten low-lying structures. Preemptive evacuation of vulnerable populations advised.`,
+        Moderate: `Flooding confirmed in the area. Current conditions suggest manageable water levels, but continued monitoring is essential.`,
+        Low: `Minor waterlogging reported. No immediate threat to life. Routine drainage response recommended.`,
       },
       Fire: {
-        Critical: `Active fire with rapid spread potential detected. The presence of toxic fumes or accelerant materials heightens the danger. Immediate fire suppression, evacuation of adjacent structures, and hazmat standby are required.${hasImage ? ' Image analysis indicates visible flames or dense smoke consistent with an active large-scale fire event.' : ''}`,
-        High: `Significant fire activity identified. The fire appears to be affecting structural elements and could spread to neighboring properties. Rapid fire response and perimeter control are recommended.`,
-        Moderate: `Contained fire incident confirmed. Current fire appears manageable with standard suppression equipment. Continue monitoring for flare-ups and ensure ventilation safety.`,
-        Low: `Minor fire or smoke report. No significant structural involvement detected. Standard investigation and monitoring recommended.`,
+        Critical: `Active fire with rapid spread potential detected. Immediate fire suppression, evacuation of adjacent structures, and hazmat standby required.${hasImage ? ' Image analysis indicates active large-scale fire event.' : ''}`,
+        High: `Significant fire activity identified. Rapid response and perimeter control recommended.`,
+        Moderate: `Contained fire incident confirmed. Manageable with standard suppression equipment.`,
+        Low: `Minor fire or smoke report. Standard investigation recommended.`,
       },
     }
 
     const defaultTemplates: Record<string, string> = {
-      Critical: `Critical ${detected.toLowerCase()} emergency detected. Multiple indicators suggest an immediate threat to life and property. Full-scale emergency response activation is recommended with priority resource deployment.${hasImage ? ' Visual evidence has been factored into this assessment and supports the critical severity determination.' : ''}`,
-      High: `Significant ${detected.toLowerCase()} incident identified. Conditions indicate elevated risk requiring prompt intervention. Recommend deploying specialized response teams within the hour.${hasImage ? ' Uploaded imagery was analyzed and contributed to the threat level assessment.' : ''}`,
-      Moderate: `${detected} incident confirmed at the reported location. Current threat level is manageable but warrants active monitoring and standby response resources.`,
-      Low: `Minor ${detected.toLowerCase()} event reported. No immediate threat to life detected. Standard assessment and documentation protocols are sufficient.`,
+      Critical: `Critical ${detected.toLowerCase()} emergency detected. Multiple indicators suggest immediate threat to life and property. Full-scale emergency response activation recommended.${hasImage ? ' Visual evidence supports the critical determination.' : ''}`,
+      High: `Significant ${detected.toLowerCase()} incident identified. Elevated risk requiring prompt intervention. Deploy specialized teams within the hour.`,
+      Moderate: `${detected} incident confirmed. Manageable threat level but warrants active monitoring and standby resources.`,
+      Low: `Minor ${detected.toLowerCase()} event reported. No immediate threat detected. Standard protocols sufficient.`,
     }
 
     const explanation = templates[detected]?.[severity] || defaultTemplates[severity] || defaultTemplates['Moderate']
 
-    const nearby: string[] = []
-    if (detected === 'Flood') nearby.push('Activate storm water pumping stations in the sector', 'Alert downstream communities along drainage channels')
-    if (detected === 'Fire') nearby.push('Check adjacent structures for fire spread risk', 'Deploy hazmat screening if industrial area')
-    if (detected === 'Earthquake') nearby.push('Inspect all nearby bridges and flyovers for structural integrity', 'Activate building safety assessment teams')
-    if (detected === 'Building Collapse') nearby.push('Cordon off 100m radius for secondary collapse risk', 'Deploy acoustic life-detection equipment')
-    if (severity === 'Critical') nearby.push('Mobilize all available NDRF units in the district', 'Establish forward command post within 500m of incident')
+    const actions: string[] = []
+    if (detected === 'Flood') { actions.push('Activate storm water pumping stations'); actions.push('Alert downstream communities') }
+    if (detected === 'Fire') { actions.push('Check adjacent structures for spread risk'); actions.push('Deploy hazmat screening if industrial area') }
+    if (detected === 'Earthquake') { actions.push('Inspect nearby bridges and flyovers'); actions.push('Activate building safety teams') }
+    if (detected === 'Building Collapse') { actions.push('Cordon off 100m radius'); actions.push('Deploy acoustic life-detection equipment') }
+    if (severity === 'Critical') { actions.push('Mobilize all available NDRF units'); actions.push('Establish forward command post') }
 
-    return c.json({
-      category: detected,
-      secondary_category: secondaryMatch,
-      confidence,
-      severity,
-      urgency,
-      explanation,
-      factors_detected: Math.round(matchStrength),
-      critical_indicators: crit,
-      risk_indicators: high,
-      image_analyzed: hasImage,
-      image_contributed: hasImage,
-      recommended_actions: nearby,
-      timestamp: new Date().toISOString(),
-    })
+    return c.json({ category: detected, secondary_category: secondaryMatch, confidence, severity, urgency, explanation, factors_detected: Math.round(matchStrength), critical_indicators: crit, risk_indicators: high, image_analyzed: hasImage, image_contributed: hasImage, recommended_actions: actions, timestamp: new Date().toISOString() })
   } catch (e: any) { return c.json({ error: e.message }, 500) }
 })
 
@@ -401,68 +394,40 @@ app.get('/api/ai/summary', async (c) => {
       db.prepare('SELECT SUM(water) as water, SUM(food) as food, SUM(medicine) as medicine, SUM(blankets) as blankets FROM resources').first(),
       db.prepare("SELECT COUNT(*) as t, SUM(CASE WHEN availability='available' THEN 1 ELSE 0 END) as a FROM volunteers").first(),
     ])
-
-    const inc = incData.results || []
-    const sh = shData.results || []
-    const res = resData as any || {}
-    const vol = volData as any || {}
-
+    const inc = incData.results || [], sh = shData.results || [], res = resData as any || {}, vol = volData as any || {}
     const critN = inc.filter((i: any) => i.severity === 'Critical').length
     const highN = inc.filter((i: any) => i.severity === 'High').length
     const tOcc = sh.reduce((s: number, x: any) => s + (x.occupancy || 0), 0)
     const tCap = sh.reduce((s: number, x: any) => s + (x.capacity || 0), 0)
     const occR = tCap > 0 ? Math.round((tOcc / tCap) * 100) : 0
-
     const cats: Record<string, number> = {}
     inc.forEach((i: any) => { cats[i.category] = (cats[i.category] || 0) + 1 })
     const topCat = Object.entries(cats).sort((a, b) => b[1] - a[1])[0]
-
     const cities: Record<string, number> = {}
     sh.forEach((s: any) => { if (s.city) cities[s.city] = (cities[s.city] || 0) + 1 })
-
     const parts: string[] = []
-
-    if (inc.length === 0) {
-      parts.push(`**SITUATION NORMAL** — No active incidents reported across the national monitoring network. All response teams are on standby. ${sh.length} facilities across ${Object.keys(cities).length} cities remain operational.`)
-    } else {
-      parts.push(`**SITUATION OVERVIEW** — ${inc.length} active incident${inc.length > 1 ? 's' : ''} across the monitoring network. ${critN} classified as critical, ${highN} as high priority. Response coordination is active across ${sh.filter((s: any) => s.status !== 'closed').length} operational facilities in ${Object.keys(cities).length} cities.`)
-      if (topCat) {
-        parts.push(`**PRIMARY CONCERN** — ${topCat[0]} events represent the leading threat category with ${topCat[1]} active report${topCat[1] > 1 ? 's' : ''}. Situational monitoring is elevated for the affected sectors.`)
-      }
+    if (inc.length === 0) parts.push(`**SITUATION NORMAL** -- No active incidents reported across the national monitoring network. All response teams on standby. ${sh.length} facilities across ${Object.keys(cities).length} cities remain operational.`)
+    else {
+      parts.push(`**SITUATION OVERVIEW** -- ${inc.length} active incident${inc.length > 1 ? 's' : ''} across the monitoring network. ${critN} critical, ${highN} high priority. Response coordination active across ${sh.filter((s: any) => s.status !== 'closed').length} facilities in ${Object.keys(cities).length} cities.`)
+      if (topCat) parts.push(`**PRIMARY CONCERN** -- ${topCat[0]} events are the leading threat with ${topCat[1]} active report${topCat[1] > 1 ? 's' : ''}.`)
     }
-
-    parts.push(`**FACILITY NETWORK** — Overall occupancy at ${occR}% across ${sh.length} registered facilities (${tOcc.toLocaleString()} of ${tCap.toLocaleString()} capacity). ${sh.filter((s: any) => s.status === 'emergency').length} operating under emergency protocols.${occR > 85 ? ' Overflow planning should be initiated immediately.' : ''}`)
-
+    parts.push(`**FACILITY NETWORK** -- Occupancy at ${occR}% across ${sh.length} facilities (${tOcc.toLocaleString()} of ${tCap.toLocaleString()}).${occR > 85 ? ' Overflow planning should begin immediately.' : ''}`)
     const lowRes: string[] = []
     if ((res.water || 0) < 3000) lowRes.push('drinking water')
     if ((res.food || 0) < 2500) lowRes.push('food supplies')
     if ((res.medicine || 0) < 2000) lowRes.push('medical supplies')
-    if ((res.blankets || 0) < 2000) lowRes.push('blankets')
-
-    if (lowRes.length > 0) {
-      parts.push(`**SUPPLY ALERT** — Stock levels for ${lowRes.join(', ')} are below recommended thresholds. Coordinate with NDRF and state administrations for immediate resupply.`)
-    } else {
-      parts.push(`**SUPPLY STATUS** — All tracked resource categories are above minimum operational thresholds. Standard distribution cycles can continue.`)
-    }
-
-    parts.push(`**PERSONNEL** — ${vol.a || 0} of ${vol.t || 0} registered responders available for immediate deployment. ${(vol.t || 0) - (vol.a || 0)} currently assigned to active operations.`)
-
+    if (lowRes.length > 0) parts.push(`**SUPPLY ALERT** -- ${lowRes.join(', ')} below recommended thresholds.`)
+    else parts.push(`**SUPPLY STATUS** -- All resource categories above minimum thresholds.`)
+    parts.push(`**PERSONNEL** -- ${vol.a || 0} of ${vol.t || 0} responders available for deployment.`)
     const recs: string[] = []
-    if (critN > 0) recs.push('Prioritize all available rescue assets toward critical incidents — assign team leads for each critical site')
-    if (occR > 80) recs.push('Activate overflow arrangements with nearby educational and military facilities')
-    if (lowRes.length > 0) recs.push(`Expedite resupply of ${lowRes.join(', ')} through SDRF emergency procurement channels`)
-    if ((vol.a || 0) < 3) recs.push('Issue mobilization alert to off-duty NDRF volunteers and Civil Defence personnel')
-    if (inc.length > 0) recs.push('Maintain 15-minute situation reporting cadence for all active incidents')
-    recs.push('Ensure communication redundancy — verify VHF radio backup for all field teams')
-    if (inc.length === 0) recs.push('Conduct routine readiness drills and equipment checks during the low-activity window')
-
-    return c.json({
-      summary: parts.join('\n\n'),
-      metrics: { activeIncidents: inc.length, criticalIncidents: critN, highPriorityIncidents: highN, shelterOccupancy: occR, availableVolunteers: vol.a || 0, totalVolunteers: vol.t || 0 },
-      recommendations: recs,
-      topIncidents: inc.slice(0, 5),
-      generated_at: new Date().toISOString(),
-    })
+    if (critN > 0) recs.push('Prioritize rescue assets toward critical incidents')
+    if (occR > 80) recs.push('Activate overflow arrangements with nearby facilities')
+    if (lowRes.length > 0) recs.push(`Expedite resupply of ${lowRes.join(', ')}`)
+    if ((vol.a || 0) < 3) recs.push('Issue mobilization alert to off-duty personnel')
+    if (inc.length > 0) recs.push('Maintain 15-minute reporting cadence for active incidents')
+    recs.push('Verify VHF radio backup for all field teams')
+    if (inc.length === 0) recs.push('Conduct readiness drills during low-activity window')
+    return c.json({ summary: parts.join('\n\n'), metrics: { activeIncidents: inc.length, criticalIncidents: critN, highPriorityIncidents: highN, shelterOccupancy: occR, availableVolunteers: vol.a || 0, totalVolunteers: vol.t || 0 }, recommendations: recs, topIncidents: inc.slice(0, 5), generated_at: new Date().toISOString() })
   } catch (e: any) { return c.json({ error: e.message }, 500) }
 })
 
@@ -470,46 +435,14 @@ app.post('/api/ai/guidance', async (c) => {
   try {
     const { category } = await c.req.json()
     const g: Record<string, any> = {
-      Flood: {
-        steps: ['Move to the highest floor or rooftop immediately — avoid basements and ground floors entirely', 'Do not attempt to walk or drive through moving water — even 15 cm of flowing water can knock an adult down', 'Turn off electricity at the main breaker if water is entering the building and you can reach it safely', 'Store clean drinking water in sealed containers — floodwater contaminates taps within hours', 'Keep identity documents, medications, and phone charger in a waterproof bag at all times', 'If you smell gas or see sparking wires, evacuate the area immediately without using electrical switches'],
-        evacuation: ['Follow routes announced by police or NDRF — avoid shortcuts through unfamiliar flooded areas', 'If using boats, ensure they are operated by trained personnel — do not overload', 'Prioritize evacuating children, elderly, pregnant women, and those with medical conditions', 'Signal rescuers from rooftops using bright fabric, mirrors, or flashlight at night'],
-        actions: ['Call Disaster Management helpline 1077 or NDRF at 011-24363260', 'Send your GPS coordinates via SMS if voice networks are congested', 'Avoid contact with floodwater — it typically carries sewage, chemicals, and debris', 'After water recedes, do not enter structures until they are cleared by structural engineers'],
-      },
-      Fire: {
-        steps: ['Evacuate immediately — do not waste time collecting belongings', 'Stay low and crawl if smoke is dense — breathable air is closest to the floor', 'Feel doors with the back of your hand before opening — if hot, the fire is on the other side', 'Never use elevators during a fire — use stairwells and keep doors closed behind you', 'If your clothing catches fire: stop, drop to the ground, and roll repeatedly', 'Cover your nose and mouth with a damp cloth to filter out smoke particles'],
-        evacuation: ['Use the nearest fire exit and proceed to the designated assembly point', 'If trapped above the fire floor, go to the roof and signal for help — do not jump', 'Close every door behind you as you leave — this slows fire spread significantly', 'Once outside, move at least 100 meters from the structure and do not re-enter'],
-        actions: ['Call Fire Service at 101 immediately', 'If safe to do so, alert neighbors by banging on doors and shouting', 'If trapped in a room, seal gaps under the door with wet cloth and signal from the window', 'Do not attempt to fight anything larger than a small wastebasket fire with an extinguisher'],
-      },
-      Earthquake: {
-        steps: ['DROP to your hands and knees immediately', 'Take COVER under a sturdy desk, table, or bed — protect your head and neck', 'HOLD ON to your shelter and be prepared to move with it until shaking stops', 'If no shelter is available, crouch against an interior wall and protect your head with your arms', 'Stay away from windows, exterior walls, heavy furniture, and anything that could fall', 'If outdoors, move to a clear area away from buildings, trees, power lines, and bridges'],
-        evacuation: ['Wait for shaking to stop completely before attempting to exit any structure', 'Use stairs only — check for structural damage on each landing before proceeding', 'Watch for falling debris, broken glass, and exposed wiring as you exit', 'Move to designated open spaces — large parks and open grounds are safest'],
-        actions: ['Check yourself and others for injuries — administer first aid where possible', 'Do not use open flames — there may be gas leaks from ruptured pipelines', 'Expect aftershocks and be prepared to drop, cover, and hold on again', 'Report structural damage to your District Magistrate office or call 112'],
-      },
-      Landslide: {
-        steps: ['If you hear rumbling sounds or see ground cracking, evacuate uphill immediately — perpendicular to the slide direction', 'Do not attempt to cross a landslide path, even if it appears to have stopped', 'Watch for muddy water in streams — this often indicates an upstream slide', 'Stay alert during and after heavy rainfall', 'Avoid valleys, drainage channels, and the bases of steep slopes during alerts', 'If indoors, move to the upper floor on the side away from the slope'],
-        evacuation: ['Leave immediately if authorities issue a landslide warning for your area', 'Do not cross bridges over swollen streams or rivers', 'Evacuate on foot if roads are blocked — do not wait for vehicle access', 'Move to high ground on stable terrain'],
-        actions: ['Report road blockages and visible ground movement to the local SDM office or call 112', 'Do not attempt to dig through slide debris without proper equipment', 'Keep well away from the edges of slide areas', 'Check on neighbors in vulnerable locations'],
-      },
-      Cyclone: {
-        steps: ['Secure all loose objects outside — flying debris causes the majority of cyclone injuries', 'Board up or tape windows to prevent shattering', 'Move to the innermost room on the lowest floor — stay away from all windows', 'Fill clean containers with fresh water — supply may be disrupted for days', 'Charge all communication devices fully and keep a battery-powered radio ready', 'Stock at least 72 hours of food, water, and essential medications'],
-        evacuation: ['Comply immediately with government evacuation orders', 'Move to the nearest designated cyclone shelter', 'Secure your home as much as possible before leaving', 'Take your emergency kit, identification documents, and essential medications'],
-        actions: ['During the storm, stay indoors and away from windows', 'After the storm passes, avoid downed power lines, standing water, and damaged structures', 'Report damage and injuries to the State Emergency Operations Centre', 'Do not use tap water until authorities confirm it is safe'],
-      },
-      'Building Collapse': {
-        steps: ['If trapped under rubble, cover your mouth with fabric to avoid inhaling dust', 'Tap on pipes or walls at regular intervals — rescue teams use acoustic sensors to locate survivors', 'Do not shout continuously — it wastes energy and you may inhale dangerous dust', 'If you can move, try to reach a void space near a large structural element', 'Conserve your phone battery — send a single SMS with your location', 'If you have access to water, drink small sips regularly'],
-        evacuation: ['If outside the collapsed area, move away immediately — secondary collapses are common', 'Do not re-enter the structure for any reason', 'Clear the area around the collapse site to allow heavy equipment access', 'Watch for dust clouds indicating ongoing structural failure'],
-        actions: ['Call NDRF (011-24363260) and local police (100) with exact location', 'If you witnessed the collapse, stay to provide information to first responders', 'Do not attempt rescue operations without proper training and equipment', 'Photograph the scene from a safe distance'],
-      },
-      'Medical Emergency': {
-        steps: ['Ensure the scene is safe for you before approaching any injured person', 'Call 108 (ambulance) or 112 (emergency) immediately', 'Check for responsiveness — tap the shoulder firmly and ask if they can hear you', 'If unresponsive but breathing, place them in the recovery position', 'Apply firm direct pressure to any external bleeding', 'Do not move a person with suspected spinal injuries unless in immediate danger'],
-        evacuation: ['Clear a path for ambulance access — remove vehicles and obstacles', 'Identify the nearest hospital and communicate this to the ambulance team', 'If multiple casualties, begin triage — prioritize life-threatening but survivable injuries', 'Designate someone to guide the ambulance to the exact location'],
-        actions: ['Begin CPR if the person is unresponsive and not breathing', 'If an AED is available, follow its voice prompts', 'Keep the patient warm with a blanket or jacket — shock causes temperature to drop', 'Note the time of onset and any medications — paramedics will need this'],
-      },
-      'Road Blockage': {
-        steps: ['Do not attempt to clear heavy debris, fallen trees, or downed power lines yourself', 'Turn on hazard lights and place reflective triangles at least 50 meters behind the obstruction', 'If power lines are down near your vehicle, stay inside', 'Report the exact blockage location with GPS coordinates', 'Check surroundings for injured people before focusing on the road', 'Photograph the obstruction for emergency records'],
-        evacuation: ['If the road is blocked ahead, carefully reverse to the last intersection', 'Follow Traffic Police diversions and check for real-time updates', 'If stranded, stay with your vehicle unless it is in a dangerous location', 'If on foot, walk facing oncoming traffic and stay on the shoulder'],
-        actions: ['Call Traffic Police at 1095 or PWD helpline with the road name and nearest landmark', 'Note whether vehicles are trapped in or under the obstruction', 'Yield immediately to approaching emergency vehicles', 'If flooding caused the blockage, alert others verbally — water depth may be hidden'],
-      },
+      Flood: { steps: ['Move to the highest floor or rooftop immediately','Do not walk or drive through moving water','Turn off electricity at the main breaker if water is entering','Store clean drinking water in sealed containers','Keep documents and medications in a waterproof bag','If you smell gas or see sparking wires, evacuate immediately'], evacuation: ['Follow routes announced by police or NDRF','Prioritize children, elderly, and pregnant women','Signal rescuers from rooftops using bright fabric','Do not use shortcuts through unfamiliar flooded areas'], actions: ['Call 1077 or NDRF at 011-24363260','Send GPS coordinates via SMS if networks are congested','Avoid contact with floodwater','Do not enter structures until cleared by engineers'] },
+      Fire: { steps: ['Evacuate immediately -- do not collect belongings','Stay low and crawl if smoke is dense','Feel doors before opening -- if hot, fire is on the other side','Never use elevators during a fire','If clothing catches fire: stop, drop, and roll','Cover nose and mouth with a damp cloth'], evacuation: ['Use nearest fire exit to assembly point','If trapped above fire, go to roof and signal','Close every door behind you','Once outside, move 100m from structure'], actions: ['Call Fire Service at 101','Alert neighbors by banging on doors','If trapped, seal door gaps with wet cloth','Do not fight fires larger than a wastebasket'] },
+      Earthquake: { steps: ['DROP to hands and knees immediately','Take COVER under a sturdy desk or table','HOLD ON until shaking stops','If no shelter, crouch against interior wall','Stay away from windows and heavy furniture','If outdoors, move to clear area away from buildings'], evacuation: ['Wait for shaking to stop before exiting','Use stairs only, check each landing','Watch for falling debris and broken glass','Move to open spaces like parks'], actions: ['Check for injuries and administer first aid','Do not use open flames -- gas leaks possible','Expect aftershocks','Report structural damage to authorities or call 112'] },
+      Landslide: { steps: ['Evacuate uphill perpendicular to slide direction','Do not cross a landslide path','Watch for muddy water in streams','Stay alert during heavy rainfall','Avoid valleys and steep slope bases','Move to upper floor away from the slope'], evacuation: ['Leave immediately on landslide warnings','Do not cross bridges over swollen rivers','Evacuate on foot if roads blocked','Move to high ground on stable terrain'], actions: ['Report ground movement to local SDM or call 112','Do not dig through debris without equipment','Stay away from slide edges','Check on vulnerable neighbors'] },
+      Cyclone: { steps: ['Secure all loose objects outside','Board up or tape windows','Move to innermost room on lowest floor','Fill containers with fresh water','Charge all devices and have battery radio ready','Stock 72 hours of food and water'], evacuation: ['Comply with government evacuation orders','Move to nearest cyclone shelter','Turn off gas and electricity before leaving','Take emergency kit and documents'], actions: ['Stay indoors during the storm','After storm, avoid power lines and standing water','Report damage to Emergency Operations Centre','Do not use tap water until cleared'] },
+      'Building Collapse': { steps: ['If trapped, cover mouth with fabric','Tap on pipes or walls at regular intervals','Do not shout continuously -- conserve energy','Try to reach void spaces near structural elements','Conserve phone battery -- send one SMS','Drink small sips of water if available'], evacuation: ['Move away from collapsed area immediately','Do not re-enter for any reason','Clear area for heavy equipment access','Watch for dust clouds indicating ongoing failure'], actions: ['Call NDRF and police with exact location','Stay to provide building info to responders','Do not attempt rescue without training','Photograph scene from safe distance'] },
+      'Medical Emergency': { steps: ['Ensure scene is safe before approaching','Call 108 or 112 immediately','Check responsiveness -- tap shoulder firmly','If breathing but unresponsive, use recovery position','Apply pressure to external bleeding','Do not move suspected spinal injuries'], evacuation: ['Clear path for ambulance access','Identify nearest hospital and route','Triage if multiple casualties','Guide ambulance to exact location'], actions: ['Begin CPR if not breathing','Use AED if available','Keep patient warm','Note time of onset and medications'] },
+      'Road Blockage': { steps: ['Do not clear heavy debris or power lines','Turn on hazard lights, place triangles 50m back','If power lines are down, stay in vehicle','Report exact location with GPS','Check for injured people','Photograph the obstruction'], evacuation: ['Reverse to last intersection if blocked','Follow Traffic Police diversions','Stay with vehicle unless in danger','Walk facing oncoming traffic if on foot'], actions: ['Call Traffic Police at 1095','Note if vehicles are trapped','Yield to emergency vehicles','Alert others if flooding caused blockage'] },
     }
     return c.json({ category, ...(g[category] || g['Medical Emergency']) })
   } catch (e: any) { return c.json({ error: e.message }, 500) }
@@ -523,8 +456,7 @@ app.get('/api/incidents/priority/queue', async (c) => {
 })
 
 app.get('/api/shelters', async (c) => {
-  const t = c.req.query('type')
-  const city = c.req.query('city')
+  const t = c.req.query('type'), city = c.req.query('city')
   let q = 'SELECT s.*, r.water, r.food, r.medicine, r.blankets, r.rescue_equipment FROM shelters s LEFT JOIN resources r ON s.id=r.shelter_id WHERE 1=1'
   const p: any[] = []
   if (t && t !== 'all') { q += ' AND s.type=?'; p.push(t) }
@@ -591,11 +523,19 @@ app.post('/api/volunteers', async (c) => {
   }
 })
 
+app.delete('/api/volunteers/:id', async (c) => {
+  try {
+    await c.env.DB.prepare('DELETE FROM volunteers WHERE id=?').bind(c.req.param('id')).run()
+    return c.json({ success: true })
+  } catch (e: any) { return c.json({ error: e.message }, 500) }
+})
+
 const html = `<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CrisisIQ</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>CrisisIQ - Disaster Response Platform</title>
+<meta name="description" content="AI-powered disaster response and emergency coordination platform for India">
+<script src="https://cdn.tailwindcss.com"><\/script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.0/css/all.min.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
@@ -615,6 +555,5 @@ app.get('/shelters', (c) => c.html(html))
 app.get('/resources', (c) => c.html(html))
 app.get('/volunteers', (c) => c.html(html))
 app.get('/command-center', (c) => c.html(html))
-app.get('/login', (c) => c.html(html))
 
 export default app

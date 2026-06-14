@@ -66,6 +66,14 @@ table.data tbody tr:hover{background:rgba(51,65,85,.18)}
 .leaflet-control-zoom a{background:rgba(10,15,28,.9) !important;color:#e2e8f0 !important;border-color:rgba(148,163,184,.08) !important}
 .leaflet-tile-pane{filter:brightness(.58) contrast(1.2) saturate(.65)}
 
+.hero-section{position:relative;min-height:420px;overflow:hidden;background:linear-gradient(168deg,rgba(10,15,28,.98) 0%,rgba(15,23,42,.95) 40%,rgba(10,15,28,.98) 100%)}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 20%,rgba(37,99,235,.07),transparent 65%),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(139,92,246,.04),transparent 55%);pointer-events:none;z-index:1}
+.hero-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.15) 30%,rgba(139,92,246,.15) 70%,transparent)}
+.hero-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,#060a11,transparent);pointer-events:none;z-index:3}
+
+.state-tooltip{background:rgba(10,15,28,.88) !important;color:#94a3b8 !important;border:1px solid rgba(148,163,184,.1) !important;border-radius:4px !important;padding:3px 8px !important;font-size:10px !important;font-weight:600 !important;letter-spacing:.3px !important;box-shadow:0 2px 8px rgba(0,0,0,.35) !important;pointer-events:none !important}
+.state-tooltip::before{display:none !important}
+
 .warning-ticker{background:rgba(220,38,38,.08);border-bottom:1px solid rgba(239,68,68,.15);overflow:hidden;white-space:nowrap;font-size:12px;color:#f87171;font-weight:500;padding:6px 0}
 .ticker-track{display:inline-block;animation:scroll-ticker 30s linear infinite}
 @keyframes scroll-ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -109,6 +117,7 @@ table.data tbody tr:hover{background:rgba(51,65,85,.18)}
   .desktop-links{display:none !important}
   .stat-val{font-size:20px}
   body{padding-bottom:68px}
+  .hero-section{min-height:340px}
 }
 .mobile-tab{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 8px;color:#475569;font-size:9px;cursor:pointer;border-radius:5px;transition:color .12s;text-decoration:none;white-space:nowrap;min-width:52px;flex-shrink:0}
 .mobile-tab.active{color:#3b82f6}
@@ -118,3 +127,8 @@ table.data tbody tr:hover{background:rgba(51,65,85,.18)}
 .brief-text p{margin-bottom:9px;line-height:1.7}
 
 .hero-gradient{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:550px;height:550px;background:radial-gradient(circle,rgba(37,99,235,.08) 0%,transparent 65%);pointer-events:none;z-index:0}
+
+.map-legend{position:absolute;bottom:16px;right:16px;z-index:400;background:rgba(10,15,28,.88);backdrop-filter:blur(14px);border:1px solid rgba(148,163,184,.08);border-radius:8px;padding:10px 13px;font-size:10px}
+.map-legend-item{display:flex;align-items:center;gap:6px;margin-bottom:4px;color:#94a3b8}
+.map-legend-item:last-child{margin-bottom:0}
+.map-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
