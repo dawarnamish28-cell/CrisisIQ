@@ -18,4 +18,10 @@ Pass the `CloudflareBindings` as generics when instantiation `Hono`:
 ```ts
 // src/index.ts
 const app = new Hono<{ Bindings: CloudflareBindings }>()
+
+
+deployed on vercel
+made by Namish
+v1initiative
+
 ```
